@@ -10,6 +10,7 @@ import (
 
 // Queue defines abstraction for nmq
 type Queue interface {
+	Publish(string, interface{}) error
 }
 
 // nmq is a main struct for app
@@ -40,4 +41,13 @@ func New(c *Config) (Queue, error) {
 		doneMessage: make(chan *Message),
 		mu:          &sync.Mutex{},
 	}, nil
+}
+
+// Publish provides publishing of data
+func (n *nmq) Publish(name string, payload interface{}) error {
+	_, err := n.client.LPush(name, payload).Result()
+	if err != nil {
+		return fmt.Errorf("unable to push data: %v", err)
+	}
+	return nil
 }
