@@ -17,7 +17,7 @@ type nmq struct {
 	client      *redis.Client
 	name        string
 	channel     string
-	mu          sync.Mutex
+	mu          *sync.Mutex
 	doneMessage chan *Message
 }
 
@@ -29,7 +29,7 @@ func New(c *Config) (Queue, error) {
 		DB:       c.RedisDB,
 	})
 
-	pong, err := client.Ping().Result()
+	_, err := client.Ping().Result()
 	if err != nil {
 		return nil, fmt.Errorf("unable to init redis client: %v", err)
 	}
