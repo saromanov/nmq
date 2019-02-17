@@ -8,8 +8,6 @@ import (
 	"github.com/go-redis/redis"
 )
 
-type Consumer func(interface{})
-
 // Queue defines abstraction for nmq
 type Queue interface {
 	Publish(string, interface{}) error
