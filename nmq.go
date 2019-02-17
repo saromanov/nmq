@@ -8,6 +8,8 @@ import (
 	"github.com/go-redis/redis"
 )
 
+type Consumer func(interface{})
+
 // Queue defines abstraction for nmq
 type Queue interface {
 	Publish(string, interface{}) error
@@ -55,4 +57,9 @@ func (n *nmq) Publish(name string, payload interface{}) error {
 // String returns name of the queue
 func (n *nmq) String() string {
 	return fmt.Sprintf("queue: %s", n.name)
+}
+
+// AddConsumer provides adding a new consumers
+func (n *nmq) AddConsumer(name string, consumer Consumer) error {
+	return nil
 }
