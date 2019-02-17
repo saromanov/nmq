@@ -51,3 +51,8 @@ func (n *nmq) Publish(name string, payload interface{}) error {
 	}
 	return nil
 }
+
+// String returns name of the queue
+func (n *nmq) String() string {
+	return fmt.Sprintf("queue: %s", n.name)
+}
