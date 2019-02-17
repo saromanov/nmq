@@ -61,3 +61,15 @@ func (n *nmq) String() string {
 func (n *nmq) AddConsumer(name string, consumer Consumer) error {
 	return nil
 }
+
+// consume provides consuming of the messages
+// currently at draft
+func (n *nmq) consume(key, data string) {
+	for {
+		value, err := n.client.RPopLPush(key, data).Result()
+		if err != nil {
+			return
+		}
+		fmt.Println(value)
+	}
+}
