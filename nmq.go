@@ -13,6 +13,7 @@ import (
 type Queue interface {
 	AddConsumer(name string, consumer Consumer) error
 	Publish(string, interface{}) error
+	Start() error
 }
 
 // nmq is a main struct for app
