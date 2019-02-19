@@ -20,6 +20,7 @@ type nmq struct {
 	client      *redis.Client
 	name        string
 	channel     string
+	channels    []string
 	mu          *sync.Mutex
 	doneMessage chan *Message
 }
@@ -84,6 +85,12 @@ func (n *nmq) RemoveConsumer(name string) error {
 	if _, err := n.client.SRem(name, name).Result(); err != nil {
 		return fmt.Errorf("unable to remove consumer %s: %v", name, err)
 	}
+	return nil
+}
+
+// AddChannel provides adding of the channel for consuming
+func (n *nmq) AddChannel(name string) error {
+	n.channels = append(n.channels, name)
 	return nil
 }
 
