@@ -4,6 +4,7 @@ package nmq
 import (
 	"fmt"
 	"sync"
+	"errors"
 
 	"github.com/go-redis/redis"
 )
@@ -25,6 +26,9 @@ type nmq struct {
 
 // New provides initialization of the app
 func New(c *Config) (Queue, error) {
+	if c == nil {
+		return nil, errors.New("config is not defined")
+	}
 	client := redis.NewClient(&redis.Options{
 		Addr:     c.RedisAddress,
 		Password: c.RedisPassword,
