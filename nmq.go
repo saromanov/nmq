@@ -10,6 +10,7 @@ import (
 
 // Queue defines abstraction for nmq
 type Queue interface {
+	AddConsumer(name string, consumer Consumer) error
 	Publish(string, interface{}) error
 }
 
