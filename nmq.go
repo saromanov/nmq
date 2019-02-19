@@ -98,13 +98,23 @@ func (n *nmq) AddChannel(name string) error {
 // currently at draft
 func (n *nmq) consume(key, data string) {
 	for {
-		value, err := n.client.RPopLPush(key, data).Result()
-		if err != nil {
-			return
-		}
-		n.doneMessage <- &Message{
-			data: value,
-			key:  key,
+
+		for i := 0; i < len(n.channels); i++ {
+			n.consumeKey(n.channels[i])
 		}
 	}
+}
+
+// consumeKey provides consuming of the key
+func (n *nmq) consumeKey(key string) error {
+	value, err := n.client.RPopLPush(key, "").Result()
+	if err != nil {
+		return err
+	}
+	n.doneMessage <- &Message{
+		data: value,
+		key:  key,
+	}
+
+	return nil
 }
