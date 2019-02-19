@@ -59,6 +59,9 @@ func (n *nmq) String() string {
 
 // AddConsumer provides adding a new consumers
 func (n *nmq) AddConsumer(name string, consumer Consumer) error {
+	if _, err := n.client.SAdd(queue.consumersKey, name).Result(); err != nil {
+		return fmt.Errorf("unable to add consumer %s: %v", name, e)
+	}
 	return nil
 }
 
