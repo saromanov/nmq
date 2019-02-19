@@ -53,7 +53,8 @@ func New(c *Config) (Queue, error) {
 
 // Start provides starting of consuming
 func (n *nmq) Start() error {
-	n.consume()
+	n.consume("", "")
+	return nil
 }
 
 // Publish provides publishing of data
@@ -95,8 +96,8 @@ func (n *nmq) consume(key, data string) {
 			return
 		}
 		n.doneMessage <- &Message{
-			value: value,
-			name:  key,
+			data: value,
+			key:  key,
 		}
 	}
 }
