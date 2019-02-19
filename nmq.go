@@ -29,6 +29,9 @@ func New(c *Config) (Queue, error) {
 	if c == nil {
 		return nil, errors.New("config is not defined")
 	}
+	if c.RedisAddress == "" {
+		c.RedisAddress = "127.0.0.1:6379"
+	}
 	client := redis.NewClient(&redis.Options{
 		Addr:     c.RedisAddress,
 		Password: c.RedisPassword,
