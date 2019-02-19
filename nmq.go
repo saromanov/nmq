@@ -2,9 +2,9 @@
 package nmq
 
 import (
+	"errors"
 	"fmt"
 	"sync"
-	"errors"
 
 	"github.com/go-redis/redis"
 )
@@ -51,6 +51,11 @@ func New(c *Config) (Queue, error) {
 	}, nil
 }
 
+// Start provides starting of consuming
+func (n *nmq) Start() error {
+	n.consume()
+}
+
 // Publish provides publishing of data
 func (n *nmq) Publish(name string, payload interface{}) error {
 	_, err := n.client.LPush(name, payload).Result()
@@ -89,6 +94,9 @@ func (n *nmq) consume(key, data string) {
 		if err != nil {
 			return
 		}
-		fmt.Println(value)
+		n.doneMessage <- &Message{
+			value: value,
+			name:  key,
+		}
 	}
 }
