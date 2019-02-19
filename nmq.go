@@ -65,6 +65,14 @@ func (n *nmq) AddConsumer(name string, consumer Consumer) error {
 	return nil
 }
 
+// RemoveConsumer provides removing of consumer from the list
+func (n *nmq) RemoveConsumer(name string) error {
+	if _, err := n.client.SRem(name, name).Result(); err != nil {
+		return fmt.Errorf("unable to remove consumer %s: %v", name, err)
+	}
+	return nil
+}
+
 // consume provides consuming of the messages
 // currently at draft
 func (n *nmq) consume(key, data string) {
