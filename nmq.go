@@ -9,6 +9,8 @@ import (
 	"github.com/go-redis/redis"
 )
 
+const redisAddress = "127.0.0.1:6379"
+
 // Queue defines abstraction for nmq
 type Queue interface {
 	AddConsumer(string, Consumer) error
@@ -32,7 +34,7 @@ func New(c *Config) (Queue, error) {
 		return nil, errors.New("config is not defined")
 	}
 	if c.RedisAddress == "" {
-		c.RedisAddress = "127.0.0.1:6379"
+		c.RedisAddress = redisAddress
 	}
 	client := redis.NewClient(&redis.Options{
 		Addr:     c.RedisAddress,
