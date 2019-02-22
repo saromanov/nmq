@@ -62,8 +62,7 @@ func (n *nmq) Start() error {
 
 // Publish provides publishing of data
 func (n *nmq) Publish(name string, payload interface{}) error {
-	_, err := n.client.LPush(name, payload).Result()
-	if err != nil {
+	if _, err := n.client.LPush(name, payload).Result(); err != nil {
 		return fmt.Errorf("unable to push data: %v", err)
 	}
 	return nil
