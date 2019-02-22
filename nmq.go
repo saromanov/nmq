@@ -96,6 +96,14 @@ func (n *nmq) AddChannel(name string) error {
 	return nil
 }
 
+// processConsume provides waiting of consumer channel and
+// sending message to consumer func
+func (n *nmq) processConsume(consumer Consumer) {
+	for data := range n.doneMessage {
+		fmt.Println(data)
+	}
+}
+
 // consume provides consuming of the messages
 // currently at draft
 func (n *nmq) consume(key, data string) {
