@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -26,6 +27,7 @@ type nmq struct {
 	channels    []string
 	mu          *sync.Mutex
 	doneMessage chan *Message
+	poolTime    time.Duration
 }
 
 // New provides initialization of the app
@@ -51,6 +53,7 @@ func New(c *Config) (Queue, error) {
 		name:        c.Name,
 		doneMessage: make(chan *Message),
 		mu:          &sync.Mutex{},
+		poolTime:    500 * time.Millisecond,
 	}, nil
 }
 
@@ -112,6 +115,8 @@ func (n *nmq) consume(key, data string) {
 		for i := 0; i < len(n.channels); i++ {
 			n.consumeKey(n.channels[i])
 		}
+
+		time.Sleep(n.poolTime)
 	}
 }
 
