@@ -109,11 +109,13 @@ func (n *nmq) processConsume(consumer Consumer) {
 
 // consume provides consuming of the messages
 // currently at draft
+// Not checking of consumeKey error, because in the case of no
+// new messages, its return nil
 func (n *nmq) consume(key, data string) {
 	for {
 
 		for i := 0; i < len(n.channels); i++ {
-			n.consumeKey(n.channels[i])
+			n.consumeKey(n.channels[i]) // nolint
 		}
 
 		time.Sleep(n.poolTime)
