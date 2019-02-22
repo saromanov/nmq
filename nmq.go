@@ -79,6 +79,7 @@ func (n *nmq) AddConsumer(name string, consumer Consumer) error {
 	if _, err := n.client.SAdd(name, name).Result(); err != nil {
 		return fmt.Errorf("unable to add consumer %s: %v", name, err)
 	}
+	go n.processConsume(consumer)
 	return nil
 }
 
