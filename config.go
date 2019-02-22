@@ -5,6 +5,5 @@ type Config struct {
 	RedisAddress  string
 	RedisPassword string
 	Name          string
-	Channel       string
 	RedisDB       int
 }

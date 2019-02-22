@@ -21,7 +21,6 @@ type Queue interface {
 type nmq struct {
 	client      *redis.Client
 	name        string
-	channel     string
 	channels    []string
 	mu          *sync.Mutex
 	doneMessage chan *Message
@@ -48,7 +47,6 @@ func New(c *Config) (Queue, error) {
 	return &nmq{
 		client:      client,
 		name:        c.Name,
-		channel:     c.Channel,
 		doneMessage: make(chan *Message),
 		mu:          &sync.Mutex{},
 	}, nil
