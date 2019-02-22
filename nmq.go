@@ -100,7 +100,7 @@ func (n *nmq) AddChannel(name string) error {
 // sending message to consumer func
 func (n *nmq) processConsume(consumer Consumer) {
 	for data := range n.doneMessage {
-		fmt.Println(data)
+		consumer.Do(data)
 	}
 }
 
