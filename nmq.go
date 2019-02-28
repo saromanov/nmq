@@ -59,7 +59,7 @@ func New(c *Config) (Queue, error) {
 
 // Start provides starting of consuming
 func (n *nmq) Start() error {
-	n.consume("", "")
+	n.consume()
 	return nil
 }
 
@@ -111,7 +111,7 @@ func (n *nmq) processConsume(consumer Consumer) {
 // currently at draft
 // Not checking of consumeKey error, because in the case of no
 // new messages, its return nil
-func (n *nmq) consume(key, data string) {
+func (n *nmq) consume() {
 	for {
 
 		for i := 0; i < len(n.channels); i++ {
