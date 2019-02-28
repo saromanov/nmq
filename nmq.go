@@ -122,7 +122,7 @@ func (n *nmq) consume() {
 			n.consumeKey(n.channels[i]) // nolint
 		}
 
-		time.Sleep(n.poolTime)
+		//time.Sleep(n.poolTime)
 	}
 }
 
@@ -132,6 +132,8 @@ func (n *nmq) consumeKey(key string) error {
 	if err != nil {
 		return err
 	}
+	n.mu.Lock()
+	defer n.mu.Unlock()
 	for _, doneMessage := range n.consumers {
 		doneMessage <- &Message{
 			data: value,
