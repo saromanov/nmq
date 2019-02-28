@@ -83,8 +83,9 @@ func (n *nmq) AddConsumer(name string, consumer Consumer) error {
 	if _, err := n.client.SAdd(name, name).Result(); err != nil {
 		return fmt.Errorf("unable to add consumer %s: %v", name, err)
 	}
-	n.consumers[name] = make(chan *Message)
-	go n.processConsume(consumer)
+	doneMessage := make(chan *Message)
+	n.consumers[name] = doneMessage
+	go n.processConsume(consumer, doneMessage)
 	return nil
 }
 
@@ -104,8 +105,8 @@ func (n *nmq) AddChannel(name string) error {
 
 // processConsume provides waiting of consumer channel and
 // sending message to consumer func
-func (n *nmq) processConsume(consumer Consumer) {
-	for data := range n.doneMessage {
+func (n *nmq) processConsume(consumer Consumer, doneMessage chan *Message) {
+	for data := range doneMessage {
 		consumer.Do(data)
 	}
 }
@@ -131,9 +132,11 @@ func (n *nmq) consumeKey(key string) error {
 	if err != nil {
 		return err
 	}
-	n.doneMessage <- &Message{
-		data: value,
-		key:  key,
+	for _, doneMessage := range n.consumers {
+		doneMessage <- &Message{
+			data: value,
+			key:  key,
+		}
 	}
 
 	return nil
