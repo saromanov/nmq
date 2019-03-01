@@ -12,6 +12,9 @@ import (
 
 const redisAddress = "127.0.0.1:6379"
 
+var (
+	errNoChannel = errors.New("channel if not found")
+)
 // Queue defines abstraction for nmq
 type Queue interface {
 	AddConsumer(string, Consumer) error
@@ -101,6 +104,17 @@ func (n *nmq) RemoveConsumer(name string) error {
 func (n *nmq) AddChannel(name string) error {
 	n.channels = append(n.channels, name)
 	return nil
+}
+
+// RemoveChannel provides removing of the channel from list
+func (n *nmq) RemoveChannel(name string) error {
+	for i, channel := range n.channels {
+		if channel == name {
+			n.channels = append(n.channels[:i], n.channels[i+1:]...)
+			return nil
+		}
+	}
+	return errNoChannel
 }
 
 // processConsume provides waiting of consumer channel and
